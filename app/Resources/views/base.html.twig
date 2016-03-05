@@ -9,9 +9,10 @@
     <body>
         
         {% for flash_message in app.session.flashbag.get('notice') %}
-            <div style="color:red">
+            <div style="background-color:red;color:white">
                 {{ flash_message }}
             </div>
+            <br><br>
         {% endfor %}        
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}

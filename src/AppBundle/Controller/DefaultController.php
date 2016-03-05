@@ -20,22 +20,22 @@ class DefaultController extends Controller
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
         ]);
     }
-    
+
     /**
      * @Route("/raspuns/html", name="default_raspuns")
-     * 
+     *
      */
     public function raspunsHtmlAction()
     {
         $number = rand(0, 100);
- 
+
         $res = new Response(
             '<html><body>Acesta este numarul generat: '.$number.'</body></html>'
         );
-        
+
         return $res;
-    }    
-    
+    }
+
     /**
      * @Route("/raspuns/json/{numar}")
      */
@@ -84,4 +84,5 @@ class DefaultController extends Controller
             array('res' => $data)
         );
     }      
+
 }

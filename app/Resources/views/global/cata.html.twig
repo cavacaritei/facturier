@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+    <table>
+        {% for x,y in arr %}
+        <tr>
+            <td style="padding:0 15px;"><b>{{ x }}</b></td>
+
+            {% for i in y %}
+                <td  style="padding:0 15px;">{{ i }}</td>
+            {% endfor %}
+
+            {% endfor %}
+        </tr>
+    </table>
+
+{% endblock %}
