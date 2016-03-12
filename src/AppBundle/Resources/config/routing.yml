@@ -15,3 +15,11 @@ yaml_cata_twig:
     defaults: { _controller: AppBundle:Global:twig,y:10 }
     requirements:
         y:  \d+
+
+yaml_product:
+    path:     /product
+    defaults: { _controller: AppBundle:Product:index }
+
+yaml_product_list:
+    path:     /product_list
+    defaults: { _controller: AppBundle:Product:list }

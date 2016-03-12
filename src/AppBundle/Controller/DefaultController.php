@@ -15,10 +15,15 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
-        ]);
+        for($i=0;$i<30;$i++){
+            for($j=0;$j<10;$j++){
+                $rez[$i][] ="text $i,$j";
+            }
+        }
+
+        return $this->render('default/index.html.twig', array(
+            'entities' => $rez,
+        ));
     }
 
     /**

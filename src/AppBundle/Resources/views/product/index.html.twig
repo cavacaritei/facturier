@@ -1,13 +1,12 @@
+
 {# app/Resources/views/default/index.html.twig #}
 {% extends 'base.html.twig' %}
 
 
 {% block body %}
-    {% for flash_message in app.session.flashbag.get('notice') %}
-        <div class="flash-notice">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
+
+    <h3>Product details</h3>
+
     <table>
         {% for x,y in arr %}
         <tr>
@@ -21,4 +20,4 @@
         </tr>
     </table>
 
-{% endblock %}
+{% endblock%}
