@@ -1,21 +1,23 @@
+app_address:
+    resource: "@AppBundle/Resources/config/routing/address.yml"
+    prefix:   /address
+app_partner:
+    resource: "@AppBundle/Resources/config/routing/partner.yml"
+    prefix:   /partner
 yaml_route_raspuns:
     path:     /raspuns/htmlmvc
     defaults: { _controller: AppBundle:Default:raspunsHtmlMvc }
-    
 yaml_route_flasf:
     path:     /flash/{numar}
     defaults: { _controller: AppBundle:Default:flashMsgEx }
-
 yaml_cata:
     path:     /cata
     defaults: { _controller: AppBundle:Global:index }
-
 yaml_cata_twig:
     path:     /cata/twig/{x}/{y}
     defaults: { _controller: AppBundle:Global:twig,y:10 }
     requirements:
         y:  \d+
-
 yaml_product:
     path:     /product
     defaults: { _controller: AppBundle:Product:index }

@@ -6,15 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * Partner
+ * ProductImage
  *
  * @ORM\Table()
  * @ORM\Entity
- * @UniqueEntity("name")
- * @ORM\HasLifecycleCallbacks()
+ * 
  * 
  */
-class Partner
+class ProductImage
 {
     /**
      * @var integer
@@ -22,43 +21,34 @@ class Partner
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;      
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string")
-     */
-    private $name;       
-    
-    /**
-     * @var integer
-     *
-     * @ORM\OneToMany(targetEntity="Address", mappedBy="partner")
-     *
-     */
-    private $addresses;     
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="bank", type="string", nullable=true)
      * 
      */
-    private $bank;    
+    private $id;    
+
+    /**
+     * 
+     * @ORM\ManyToMany(targetEntity="Product", inversedBy="images")
+     * 
+     */
+    private $products;    
+   
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", nullable=true)
+     */
+    private $name;     
     
     /**
      * @var string
      *
-     * @ORM\Column(name="iban", type="string", nullable=true)
-     * 
+     * @ORM\Column(name="path", type="string", nullable=true)
      */
-    private $iban;      
-    
+    private $path;  
+        
     /**
      * @var \DateTime
-     *
+     * 
      * @ORM\Column(name="dat_cre", type="datetime")
      */
     private $datCre;
@@ -69,13 +59,22 @@ class Partner
      * @ORM\Column(name="dat_upd", type="datetime")
      */
     private $datUpd;    
-
+    
+    /**
+     * @inheritDoc
+     */
+    public function __toString()
+    {
+        return $this->reference;
+    }    
+    
+ 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->products = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -93,7 +92,7 @@ class Partner
      *
      * @param string $name
      *
-     * @return Partner
+     * @return ProductImage
      */
     public function setName($name)
     {
@@ -113,63 +112,39 @@ class Partner
     }
 
     /**
-     * Set bank
+     * Set path
      *
-     * @param string $bank
+     * @param string $path
      *
-     * @return Partner
+     * @return ProductImage
      */
-    public function setBank($bank)
+    public function setPath($path)
     {
-        $this->bank = $bank;
+        $this->path = $path;
 
         return $this;
     }
 
     /**
-     * Get bank
+     * Get path
      *
      * @return string
      */
-    public function getBank()
+    public function getPath()
     {
-        return $this->bank;
-    }
-
-    /**
-     * Set iban
-     *
-     * @param string $iban
-     *
-     * @return Partner
-     */
-    public function setIban($iban)
-    {
-        $this->iban = $iban;
-
-        return $this;
-    }
-
-    /**
-     * Get iban
-     *
-     * @return string
-     */
-    public function getIban()
-    {
-        return $this->iban;
+        return $this->path;
     }
 
     /**
      * Set datCre
-     * @ORM\PrePersist
+     *
      * @param \DateTime $datCre
      *
-     * @return Partner
+     * @return ProductImage
      */
-    public function setDatCre()
+    public function setDatCre($datCre)
     {
-        $this->datCre = new \DateTime();
+        $this->datCre = $datCre;
 
         return $this;
     }
@@ -187,16 +162,13 @@ class Partner
     /**
      * Set datUpd
      *
-     * @ORM\PreUpdate
-     * @ORM\PrePersist
-     * 
      * @param \DateTime $datUpd
      *
-     * @return Partner
+     * @return ProductImage
      */
-    public function setDatUpd()
+    public function setDatUpd($datUpd)
     {
-        $this->datUpd = new \DateTime();
+        $this->datUpd = $datUpd;
 
         return $this;
     }
@@ -212,36 +184,36 @@ class Partner
     }
 
     /**
-     * Add address
+     * Add product
      *
-     * @param \AppBundle\Entity\Address $address
+     * @param \AppBundle\Entity\Product $product
      *
-     * @return Partner
+     * @return ProductImage
      */
-    public function addAddress(\AppBundle\Entity\Address $address)
+    public function addProduct(\AppBundle\Entity\Product $product)
     {
-        $this->addresses[] = $address;
+        $this->products[] = $product;
 
         return $this;
     }
 
     /**
-     * Remove address
+     * Remove product
      *
-     * @param \AppBundle\Entity\Address $address
+     * @param \AppBundle\Entity\Product $product
      */
-    public function removeAddress(\AppBundle\Entity\Address $address)
+    public function removeProduct(\AppBundle\Entity\Product $product)
     {
-        $this->addresses->removeElement($address);
+        $this->products->removeElement($product);
     }
 
     /**
-     * Get addresses
+     * Get products
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getAddresses()
+    public function getProducts()
     {
-        return $this->addresses;
+        return $this->products;
     }
 }

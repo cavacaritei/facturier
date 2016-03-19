@@ -3,13 +3,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Partner
- * @ORM\Entity
- * @ORM\Table(name="partner")
  *
+ * @ORM\Table()
+ * @ORM\Entity
+ * @UniqueEntity("name")
+ * @ORM\HasLifecycleCallbacks()
+ * 
  */
 class Partner
 {
@@ -19,54 +22,53 @@ class Partner
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
      */
-    private $id;
-
+    private $id;      
+    
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string")
-     *
      */
-    private $name;
-
+    private $name;       
+    
     /**
+     * @var integer
      *
      * @ORM\OneToMany(targetEntity="Address", mappedBy="partner")
      *
      */
-    private $addresses;
-
+    private $addresses;     
+    
     /**
      * @var string
      *
-     * @ORM\Column(name="bank", type="string")
-     *
+     * @ORM\Column(name="bank", type="string", nullable=true)
+     * 
      */
-    private $bank;
-
+    private $bank;    
+    
     /**
      * @var string
      *
-     * @ORM\Column(name="iban", type="string")
-     *
+     * @ORM\Column(name="iban", type="string", nullable=true)
+     * 
      */
-    private $iban;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dat_upd", type="datetime")
-     */
-    private $datUpd;
-
+    private $iban;      
+    
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="dat_cre", type="datetime")
      */
     private $datCre;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dat_upd", type="datetime")
+     */
+    private $datUpd;    
 
     /**
      * Constructor
@@ -159,39 +161,15 @@ class Partner
     }
 
     /**
-     * Set datUpd
-     *
-     * @param \DateTime $datUpd
-     *
-     * @return Partner
-     */
-    public function setDatUpd($datUpd)
-    {
-        $this->datUpd = $datUpd;
-
-        return $this;
-    }
-
-    /**
-     * Get datUpd
-     *
-     * @return \DateTime
-     */
-    public function getDatUpd()
-    {
-        return $this->datUpd;
-    }
-
-    /**
      * Set datCre
-     *
+     * @ORM\PrePersist
      * @param \DateTime $datCre
      *
      * @return Partner
      */
-    public function setDatCre($datCre)
+    public function setDatCre()
     {
-        $this->datCre = $datCre;
+        $this->datCre = new \DateTime();
 
         return $this;
     }
@@ -204,6 +182,33 @@ class Partner
     public function getDatCre()
     {
         return $this->datCre;
+    }
+
+    /**
+     * Set datUpd
+     *
+     * @ORM\PreUpdate
+     * @ORM\PrePersist
+     * 
+     * @param \DateTime $datUpd
+     *
+     * @return Partner
+     */
+    public function setDatUpd()
+    {
+        $this->datUpd = new \DateTime();
+
+        return $this;
+    }
+
+    /**
+     * Get datUpd
+     *
+     * @return \DateTime
+     */
+    public function getDatUpd()
+    {
+        return $this->datUpd;
     }
 
     /**
@@ -239,4 +244,10 @@ class Partner
     {
         return $this->addresses;
     }
+
+    function __toString()
+    {
+        return $this->name;
+    }
+
 }
