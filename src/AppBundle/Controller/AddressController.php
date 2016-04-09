@@ -8,12 +8,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Address;
 use AppBundle\Form\AddressType;
 
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 /**
  * Address controller.
  *
  */
 class AddressController extends Controller
 {
+
     /**
      * Lists all Address entities.
      *
@@ -37,6 +41,9 @@ class AddressController extends Controller
     {
         $address = new Address();
         $form = $this->createForm('AppBundle\Form\AddressType', $address);
+        /* Adaug aici butonul de submit */
+        $form->add('submit', SubmitType::class);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -49,12 +56,12 @@ class AddressController extends Controller
 
         return $this->render('address/new.html.twig', array(
             'address' => $address,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ));
     }
 
     /**
-     * Finds and displays a Address entity.
+     * Finds and displays a Addres entity.
      *
      */
     public function showAction(Address $address)
@@ -75,6 +82,8 @@ class AddressController extends Controller
     {
         $deleteForm = $this->createDeleteForm($address);
         $editForm = $this->createForm('AppBundle\Form\AddressType', $address);
+        /* Adaug aici butonul de submit */
+        $editForm->add('submit', SubmitType::class, ['label'=>'Trimite', 'attr'=>['class'=>'btn btn-primary']]);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -82,7 +91,7 @@ class AddressController extends Controller
             $em->persist($address);
             $em->flush();
 
-            return $this->redirectToRoute('address_edit', array('id' => $address->getId()));
+            return $this->redirectToRoute('address_show', array('id' => $address->getId()));
         }
 
         return $this->render('address/edit.html.twig', array(
@@ -122,6 +131,7 @@ class AddressController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('address_delete', array('id' => $address->getId())))
             ->setMethod('DELETE')
+            ->add('submit', SubmitType::class, ['label'=>'Delete', 'attr'=>['class'=>'btn btn-primary']])
             ->getForm()
         ;
     }

@@ -2,6 +2,7 @@ partner_index:
     path:     /
     defaults: { _controller: "AppBundle:Partner:index" }
     methods:  GET
+
 partner_show:
     path:     /{id}/show
     defaults: { _controller: "AppBundle:Partner:show" }

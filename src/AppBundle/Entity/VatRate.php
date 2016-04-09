@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table()
  * @ORM\Entity
  * @UniqueEntity("code")
- * 
+ * @ORM\HasLifecycleCallbacks()
  */
 class VatRate
 {
@@ -58,9 +58,12 @@ class VatRate
      * @ORM\Column(name="dat_upd", type="datetime")
      */
     private $datUpd;    
-      
 
-
+    public function __toString()
+    {
+        return $this->rate;
+    }
+    
     /**
      * Get id
      *
@@ -145,14 +148,14 @@ class VatRate
 
     /**
      * Set datCre
-     *
+     * @ORM\PrePersist
      * @param \DateTime $datCre
      *
      * @return VatRate
      */
     public function setDatCre($datCre)
     {
-        $this->datCre = $datCre;
+        $this->datCre = new \DateTime();
 
         return $this;
     }
@@ -169,14 +172,15 @@ class VatRate
 
     /**
      * Set datUpd
-     *
+     * @ORM\PreUpdate
+     * @ORM\PrePersist
      * @param \DateTime $datUpd
      *
      * @return VatRate
      */
     public function setDatUpd($datUpd)
     {
-        $this->datUpd = $datUpd;
+        $this->datUpd = new \DateTime();
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -10,11 +11,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table()
  * @ORM\Entity
- *
+ * 
  * @UniqueEntity("reference")
  * @UniqueEntity("ean")
- *
- *
+ * @ORM\HasLifecycleCallbacks()
+ * 
  */
 class Product
 {
@@ -24,87 +25,87 @@ class Product
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
+     * 
      */
-    private $id;
-
+    private $id;    
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nume", type="string")
+     * 
+     */
+    private $nume; 
+    
     /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="UnitMeasure")
-     *
-     */
-    private $unitMeasure;
-
+     * 
+     */ 
+    private $unitMeasure;    
+    
     /**
-     *
+     * 
      * @ORM\ManyToMany(targetEntity="Category", inversedBy="products")
-     *
+     * 
      */
-    private $categories;
-
+    private $categories;    
+    
     /**
-     *
-     * @ORM\ManyToMany(targetEntity="Feature", inversedBy="products")
-     *
-     *
+     * 
+     * @ORM\ManyToMany(targetEntity="Feature", inversedBy="products", cascade={"persist"})
+     * 
      */
-    private $features;
-
+    private $features;  
+    
     /**
-     *
-     * @ORM\ManyToMany(targetEntity="ProductImage", mappedBy="products")
-     *
-     *
+     * 
+     * @ORM\OneToMany(targetEntity="ProductImage", mappedBy="product", cascade={"persist"}))
+     * 
+     * 
      */
-    private $images;
-
+    private $images;      
+    
     /**
-     *
+     * 
      * @ORM\OneToMany(targetEntity="ProductWarehouse", mappedBy="product")
-     *
-     *
+     * 
+     * 
      */
-    private $productWarehouses;
-
+    private $productWarehouses;       
+   
     /**
      * @var string
      *
      * @ORM\Column(name="manufacturer", type="string", nullable=true)
      */
-    private $manufacturer;
-
+    private $manufacturer;     
+    
     /**
      * @var string
      *
      * @ORM\Column(name="ean", type="string", nullable=true)
      */
-    private $ean;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", nullable=true)
-     */
-    private $name;
-
+    private $ean;  
+    
     /**
      * @var string
      *
      * @ORM\Column(name="reference", type="string")
      */
-    private $reference;
-
+    private $reference;     
+    
     /**
      * @var decimal
      *
      * @ORM\Column(name="sale_price", type="decimal", precision=16, scale=6, nullable=true)
      */
-    private $salePrice;
-
+    private $salePrice;    
+    
     /**
      * @var \DateTime
-     *
+     * 
      * @ORM\Column(name="dat_cre", type="datetime")
      */
     private $datCre;
@@ -114,26 +115,26 @@ class Product
      *
      * @ORM\Column(name="dat_upd", type="datetime")
      */
-    private $datUpd;
-
+    private $datUpd;    
+    
     /**
      * @inheritDoc
      */
     public function __toString()
     {
         return $this->reference;
-    }
-
-
+    }    
+    
+ 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->features = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->images = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->productWarehouses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->features = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->productWarehouses = new ArrayCollection();
     }
 
     /**
@@ -147,6 +148,29 @@ class Product
     }
 
     /**
+     * Set nume
+     *
+     * @param string $nume
+     *
+     * @return Product
+     */
+    public function setNume($nume)
+    {
+        $this->nume = $nume;
+        return $this;
+    }
+    
+    /**
+     * Get nume
+     *
+     * @return string
+     */
+    public function getNume()
+    {
+        return $this->nume;
+    }
+    
+    /**
      * Set manufacturer
      *
      * @param string $manufacturer
@@ -156,10 +180,9 @@ class Product
     public function setManufacturer($manufacturer)
     {
         $this->manufacturer = $manufacturer;
-
         return $this;
     }
-
+    
     /**
      * Get manufacturer
      *
@@ -180,7 +203,6 @@ class Product
     public function setEan($ean)
     {
         $this->ean = $ean;
-
         return $this;
     }
 
@@ -244,14 +266,14 @@ class Product
 
     /**
      * Set datCre
-     *
+     * @ORM\PrePersist
      * @param \DateTime $datCre
      *
      * @return Product
      */
     public function setDatCre($datCre)
     {
-        $this->datCre = $datCre;
+        $this->datCre = new \DateTime();
 
         return $this;
     }
@@ -268,14 +290,15 @@ class Product
 
     /**
      * Set datUpd
-     *
+     * @ORM\PreUpdate
+     * @ORM\PrePersist
      * @param \DateTime $datUpd
      *
      * @return Product
      */
     public function setDatUpd($datUpd)
     {
-        $this->datUpd = $datUpd;
+        $this->datUpd = new \DateTime();
 
         return $this;
     }
@@ -357,7 +380,7 @@ class Product
      */
     public function addFeature(\AppBundle\Entity\Feature $feature)
     {
-        $this->features[] = $feature;
+        $this->features->add($feature);
 
         return $this;
     }
@@ -391,9 +414,11 @@ class Product
      */
     public function addImage(\AppBundle\Entity\ProductImage $image)
     {
-        $this->images[] = $image;
+        
+        $image->setProduct($this);
+        
+        $this->images->add($image);
 
-        return $this;
     }
 
     /**
@@ -448,29 +473,5 @@ class Product
     public function getProductWarehouses()
     {
         return $this->productWarehouses;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Product
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 }

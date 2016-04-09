@@ -9,15 +9,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
-
     /**
-     * @Route("/", name="homepage")
+     * @Route("/", name="index")
      */
     public function indexAction(Request $request)
     {
+        /*
+         * sa generam un array de test
+         * 
+         */ 
         for($i=0;$i<30;$i++){
-            for($j=0;$j<10;$j++){
-                $rez[$i][] ="text $i,$j";
+            for($j=0;$j<10;$j++){                
+                $rez[$i][] ="text $i,$j";                
             }
         }
 
@@ -25,22 +28,22 @@ class DefaultController extends Controller
             'entities' => $rez,
         ));
     }
-
+    
     /**
      * @Route("/raspuns/html", name="default_raspuns")
-     *
+     * 
      */
     public function raspunsHtmlAction()
     {
         $number = rand(0, 100);
-
+ 
         $res = new Response(
             '<html><body>Acesta este numarul generat: '.$number.'</body></html>'
         );
-
+        
         return $res;
-    }
-
+    }    
+    
     /**
      * @Route("/raspuns/json/{numar}")
      */
@@ -89,5 +92,4 @@ class DefaultController extends Controller
             array('res' => $data)
         );
     }      
-
 }

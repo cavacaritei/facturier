@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @ORM\Table()
  * @ORM\Entity
- * 
+ * @ORM\HasLifecycleCallbacks()
  */
 class Feature
 {
@@ -47,20 +47,7 @@ class Feature
      * @ORM\Column(name="f_value", type="string", nullable=true)
      */
     private $value;
-    
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dat_cre", type="datetime")
-     */
-    private $datCre;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="dat_upd", type="datetime")
-     */
-    private $datUpd;     
+     
     
     /**
      * 
@@ -114,14 +101,14 @@ class Feature
 
     /**
      * Set datCre
-     *
+     * @ORM\PrePersist
      * @param \DateTime $datCre
      *
      * @return Feature
      */
     public function setDatCre($datCre)
     {
-        $this->datCre = $datCre;
+        $this->datCre = new \DateTime();
 
         return $this;
     }
@@ -138,14 +125,15 @@ class Feature
 
     /**
      * Set datUpd
-     *
+     * @ORM\PreUpdate
+     * @ORM\PrePersist
      * @param \DateTime $datUpd
      *
      * @return Feature
      */
     public function setDatUpd($datUpd)
     {
-        $this->datUpd = $datUpd;
+        $this->datUpd = new \DateTime();
 
         return $this;
     }

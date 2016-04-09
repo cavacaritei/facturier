@@ -1,5 +1,4 @@
-{% extends 'base.html.twig' %}
-
+{% extends 'partner/partner_layout.html.twig' %}
 {% block body %}
     <h1>Address list</h1>
 
@@ -15,6 +14,7 @@
                 <th>Country</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Partner</th>
                 <th>Datcre</th>
                 <th>Datupd</th>
                 <th>Actions</th>
@@ -30,31 +30,26 @@
                 <td>{{ address.city }}</td>
                 <td>{{ address.country }}</td>
                 <td>{{ address.email }}</td>
-                <td>{{ address.phone }}</td>
+                <td>{{ address.phone }}</td>                
+                <td>
+                    <a href="{% if address.partner.id is defined %} {{ path('partner_show', { 'id': address.partner.id }) }} {% endif %}">{{ address.partner }}</a>                          
+                </td>
                 <td>{% if address.datCre %}{{ address.datCre|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if address.datUpd %}{{ address.datUpd|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
-                    {#<ul>#}
-                        {#<li>#}
-                            <a class="btn btn-sm btn-info" href="{{ path('address_show', { 'id': address.id }) }}">
-                                <span class="glyphicon glyphicon-share"></span> Arata
-                            </a>
-                        {#</li>#}
-                        {#<li>#}
-                            <a class="btn btn-sm btn-default" href="{{ path('address_edit', { 'id': address.id }) }}">
-                                <span class="glyphicon glyphicon-edit"></span> Edit
-                            </a>
-                        {#</li>#}
-                    {#</ul>#}
+                    <a class="btn btn-sm btn-info" href="{{ path('address_show', { 'id': address.id }) }}">
+                        <span class="glyphicon glyphicon-share"></span> Show
+                    </a>
+
+                    <a class="btn btn-sm btn-default" href="{{ path('address_edit', { 'id': address.id }) }}">
+                        <span class="glyphicon glyphicon-edit"></span>Edit
+                    </a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+        <a href="{{ path('address_new') }}" class="btn btn-success">Create a new entry</a>
 </div>
-    <ul>
-        <li>
-            <a href="{{ path('address_new') }}">Create a new entry</a>
-        </li>
-    </ul>
+
 {% endblock %}
