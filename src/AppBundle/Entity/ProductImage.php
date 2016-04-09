@@ -177,7 +177,7 @@ class ProductImage
     {
         return null === $this->path
             ? null
-            : $this->getUploadDir().'/'.$this->path;
+            : $this->getUploadDir().'/'.$this->id.'.'.$this->path;
     }
 
     protected function getUploadRootDir()
@@ -189,7 +189,7 @@ class ProductImage
 
     protected function getUploadDir()
     {
-        // get rid of the __DIR__ so it doesn't screw up
+        // get rid of the __DIR__ so it doesn't screw upF
         // when displaying uploaded doc/image in the view.
         return 'uploads/images';
     }
