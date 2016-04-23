@@ -1,4 +1,16 @@
 {% extends 'product/product_layout.html.twig' %}
+{% form_theme delete_form ':Form:fields.html.twig' %}
+{% trans_default_domain 'AppBundle' %}
+
+{% block submenu %}
+    {{ parent() }}
+    <hr />
+    <ul class="nav nav-sidebar">
+        <li><a href="{{ path('featurename_new') }}">{% trans %}Add new{% endtrans %}</a></li>
+        <li><a href="{{ path('featurename_index') }}">{% trans %}List{% endtrans %}</a></li>
+        <li><a href="{{ path('featurename_edit', {'id':featureName.id}) }}">{% trans %}Edit{% endtrans %}</a></li>
+    </ul>
+{% endblock %}
 {% block body %}
     <h1>Feature Name</h1>
 
@@ -7,33 +19,41 @@
         <table class="table table-bordered table-hover record_properties">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>{% trans %}Id{% endtrans %}</th>
                 <td>{{ featureName.id }}</td>
             </tr>
             <tr>
-                <th>Feature name value</th>
-                <td>{{ featureName.fnValue }}</td>
+                <th>{% trans %}Feature name en{% endtrans %}</th>
+                <td>{{ featureName.en }}</td>
             </tr>
             <tr>
-                <th>Creation date</th>
+                <th>{% trans %}Feature name ro{% endtrans %}</th>
+                <td>{{ featureName.ro }}</td>
+            </tr>      
+            <tr>
+                <th>{% trans %}Feature name bg{% endtrans %}</th>
+                <td>{{ featureName.bg }}</td>
+            </tr>            
+            <tr>
+                <th>{% trans %}Creation date{% endtrans %}</th>
                 <td>{% if featureName.datCre %}{{ featureName.datCre|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
             <tr>
-                <th>Update date</th>
+                <th>{% trans %}Update date{% endtrans %}</th>
                 <td>{% if featureName.datUpd %}{{ featureName.datUpd|date('Y-m-d H:i:s') }}{% endif %}</td>
             </tr>
         </tbody>
     </table>
     </div>
 
-    <div class="form-group">
+
         {{ form_start(delete_form) }}
-        <div class="col-md-3 col-md-offset-1 col-sm-4 col-sm-offset-2">
-           {{ form_widget(delete_form.submit, { 'label': 'Delete', 'attr': {'class': 'btn btn-sm btn-danger'}}) }}
-        </div>
+
+           {{ form_widget(delete_form) }}
+
         {{ form_end(delete_form) }}
-    </div>        
+
 </div> 
-    <a href="{{ path('featurename_index') }}">Back to the list</a>
+
 
 {% endblock %}

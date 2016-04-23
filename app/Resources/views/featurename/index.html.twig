@@ -1,5 +1,14 @@
 {% extends 'product/product_layout.html.twig' %}
+{% trans_default_domain 'AppBundle' %}
 
+{% block submenu %}
+    {{ parent() }}
+    <hr />
+    <ul class="nav nav-sidebar">
+        <li><a href="{{ path('featurename_new') }}">{% trans %}Add new{% endtrans %}</a></li>
+        <li><a href="{{ path('featurename_index') }}">{% trans %}List{% endtrans %}</a></li>
+    </ul>
+{% endblock %}
 {% block body %}
     <h1>Feature Name List</h1>
 
@@ -7,18 +16,22 @@
     <table class="table table-hover records_list">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Fnvalue</th>
-                <th>Datcre</th>
-                <th>Datupd</th>
-                <th>Actions</th>
+                <th>{% trans %}Id{% endtrans %}</th>
+                <th>EN</th>
+                <th>RO</th>
+                <th>BG</th>
+                <th>{% trans %}Datcre{% endtrans %}</th>
+                <th>{% trans %}Datupd{% endtrans %}</th>
+                <th>{% trans %}Actions{% endtrans %}</th>
             </tr>
         </thead>
         <tbody>
         {% for featureName in featureNames %}
             <tr>
                 <td><a href="{{ path('featurename_show', { 'id': featureName.id }) }}">{{ featureName.id }}</a></td>
-                <td>{{ featureName.fnValue }}</td>
+                <td>{{ featureName.en }}</td>
+                <td>{{ featureName.ro }}</td>
+                <td>{{ featureName.bg }}</td>
                 <td>{% if featureName.datCre %}{{ featureName.datCre|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if featureName.datUpd %}{{ featureName.datUpd|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
@@ -33,6 +46,6 @@
         {% endfor %}
         </tbody>
     </table>
-        <a href="{{ path('featurename_new') }}" class="btn btn-success">Create a new entry</a>
+
 </div>
 {% endblock %}
