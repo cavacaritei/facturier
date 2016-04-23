@@ -25,17 +25,41 @@ class ProductController extends Controller
      */
     public function indexAction()
     {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        /* numele coloanelor din baza de date */
+//        $mapping = $this->getDoctrine()->getManager()->getClassMetadata('AppBundle:Product');
+//        $columns = $mapping->getFieldNames();
+//
+//        $products = $em->getRepository('AppBundle:Product')->findAll();
+//
+//        return $this->render('product/index.html.twig', array(
+//            'products' => $products,
+//            'columns'  => $columns,
+//        ));
+
         $em = $this->getDoctrine()->getManager();
+        $lang = $this->get('translator')->getLocale();
+        $qb = $em->createQueryBuilder();
+        $qb->select(array('p', 'pw', 'f', 'fn', 'pl', 'pwa'))
+            ->from('AppBundle:Product', 'p')
+            ->leftJoin('p.productWarehouses', 'pw')
+            ->leftJoin('pw.warehouse', 'pwa')
+            ->leftJoin('p.features', 'f')
+            ->leftJoin('f.name', 'fn')
+            ->leftJoin('p.productLangs', 'pl')
+            ->andWhere($qb->expr()->eq('pl.lang', '?1'))
+            //->andWhere($qb->expr()->eq('fn.lang', '?2'))
+            ->orderBy('pl.name', 'DESC')
+            ->setParameter(1, $lang)
+            //->setParameter(2, $lang)
+            ->setMaxResults(3);
 
-        /* numele coloanelor din baza de date */
-        $mapping = $this->getDoctrine()->getManager()->getClassMetadata('AppBundle:Product');
-        $columns = $mapping->getFieldNames();
-
-        $products = $em->getRepository('AppBundle:Product')->findAll();
+        $entities = $qb->getQuery()->getArrayResult();
 
         return $this->render('product/index.html.twig', array(
-            'products' => $products,
-            'columns'  => $columns,
+            'entities' => $entities,
+            'lang' => $lang
         ));
     }
 
@@ -48,19 +72,19 @@ class ProductController extends Controller
         $product = new Product();
         $form = $this->createForm('AppBundle\Form\ProductType', $product);
         $form->add('submit', SubmitType::class, array(
-            'label'=>'Create',
-            'attr'=>array(
-                'class'=>'btn btn-primary',
+            'label' => 'Create',
+            'attr' => array(
+                'class' => 'btn btn-primary',
             ),
-            'translation_domain'=>'AppBundle',
+            'translation_domain' => 'AppBundle',
         ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            
+
             $em->persist($product);
-            
+
             $em->flush();
 
             return $this->redirectToRoute('product_show', array('id' => $product->getId()));
@@ -93,27 +117,27 @@ class ProductController extends Controller
     public function editAction(Request $request, Product $product)
     {
         $origImages = new ArrayCollection();
-        
+
         // Create an ArrayCollection of the current Tag objects in the database
         foreach ($product->getImages() as $image) {
-           $origImages->add($image);
-        }     
-    
+            $origImages->add($image);
+        }
+
         //$deleteForm = $this->createDeleteForm($product);
         $editForm = $this->createForm('AppBundle\Form\ProductType', $product);
         $editForm->add('submit', SubmitType::class, array(
-            'label'=>'Edit',
-            'attr'=>array(
-                'class'=>'btn btn-succes'
+            'label' => 'Edit',
+            'attr' => array(
+                'class' => 'btn btn-succes'
             ),
-            'translation_domain'=>'AppBundle',
+            'translation_domain' => 'AppBundle',
         ));
         $editForm->handleRequest($request);
-        
+
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            
+
             // remove the relationship between the tag and the Task
             foreach ($origImages as $image) {
                 if (false === $product->getImages()->contains($image)) {
@@ -121,7 +145,7 @@ class ProductController extends Controller
                     $em->remove($image);
                 }
             }
-            
+
             $em->persist($product);
             $em->flush();
 
@@ -146,12 +170,12 @@ class ProductController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             // Create an ArrayCollection of the current Tag objects in the database
-            if($product->getImages()){
+            if ($product->getImages()) {
                 foreach ($product->getImages() as $image) {
                     $em->remove($image);
-                }   
+                }
             }
-          
+
             $em->remove($product);
             $em->flush();
         }
@@ -172,13 +196,12 @@ class ProductController extends Controller
             ->setAction($this->generateUrl('product_delete', array('id' => $product->getId())))
             ->setMethod('DELETE')
             ->add('submit', SubmitType::class, array(
-                'label'=>'Delete',
-                'attr'=>array(
-                    'class'=>'btn btn-danger'
+                'label' => 'Delete',
+                'attr' => array(
+                    'class' => 'btn btn-danger'
                 ),
-                'translation_domain'=>'AppBundle',
+                'translation_domain' => 'AppBundle',
             ))
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

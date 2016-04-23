@@ -4,10 +4,12 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Choice;
 
 class CsvFilesType extends AbstractType
 {
@@ -21,19 +23,22 @@ class CsvFilesType extends AbstractType
             ->add('name', TextType::class, array(
                 'translation_domain'=>'AppBundle',
             ))
-            ->add('tip', TextType::class, array(
-                'translation_domain'=>'AppBundle',
+//            ->add('tip', TextType::class, array(
+//                'translation_domain'=>'AppBundle',
+//            ))
+            ->add('tip', ChoiceType::class, array(
+                'choices'=>array(
+                    'CSV Product'=>'productCsv',
+                    'CSV Feature'=>'featureCsv',
+                    'CSV Stoc'=>'productStocCsv'
+                )
             ))
             ->add('file', FileType::class, array(
-                'translation_domain'=>'AppBundle',
-            ))
-            ->add('isUsed', CheckboxType::class, array(
                 'translation_domain'=>'AppBundle',
             ))
            // ->add('datCre', 'datetime')
         ;
     }
-    
     /**
      * @param OptionsResolver $resolver
      */
